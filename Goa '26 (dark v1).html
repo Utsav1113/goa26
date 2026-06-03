@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Goa '26">
+<meta name="theme-color" content="#111111">
+<title>Goa '26</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#111111;
+  --surface:#1c1c1c;
+  --surface2:#242424;
+  --surface3:#2c2c2c;
+  --border:#2e2e2e;
+  --border2:#3a3a3a;
+  --lime:#c8f065;
+  --lime-dark:#9ebe3a;
+  --white:#f0f0f0;
+  --muted:#666;
+  --muted2:#999;
+  --amber:#f5c842;
+  --red:#ff5f5f;
+  --green:#4cd964;
+  --aastha:#ff8cc6;
+  --utsav:#5ec8ff;
+  --radius:16px;
+  --font:'Geist',sans-serif;
+  --font-mono:'Geist Mono',ui-monospace,monospace;
+}
+html,body{
+  background:var(--bg);color:var(--white);
+  font-family:var(--font);
+  min-height:100dvh;max-width:430px;margin:0 auto;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+
+/* HEADER */
+.app-header{
+  position:sticky;top:0;z-index:100;
+  padding-top:env(safe-area-inset-top);
+  background:rgba(17,17,17,0.96);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.header-row{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;}
+.h-left{}
+.h-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted2);margin-bottom:2px;}
+.h-title{font-size:22px;font-weight:800;letter-spacing:-0.03em;color:var(--white);}
+.h-title span{color:var(--lime);}
+.h-badge{
+  background:var(--lime);color:#111;
+  font-size:11px;font-weight:700;letter-spacing:0.04em;
+  padding:6px 12px;border-radius:100px;
+}
+
+/* DAY TABS */
+.day-strip{
+  display:flex;gap:6px;padding:8px 18px 12px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.day-strip::-webkit-scrollbar{display:none;}
+.dtab{
+  flex-shrink:0;padding:6px 14px;border-radius:100px;
+  font-family:var(--font);font-size:12px;font-weight:600;
+  border:1px solid var(--border2);background:transparent;
+  color:var(--muted2);cursor:pointer;
+  transition:all 0.15s ease;letter-spacing:0.01em;
+}
+.dtab.active{background:var(--lime);border-color:var(--lime);color:#111;}
+
+/* SCROLL BODY */
+.scroll-body{padding:14px 14px 120px;}
+
+/* DAY VIEWS */
+.day-view{display:none;}
+.day-view.active{display:block;}
+
+/* HERO CARD */
+.hero-card{
+  border-radius:var(--radius);padding:20px 20px 18px;
+  margin-bottom:12px;position:relative;overflow:hidden;
+  cursor:default;
+}
+.hero-num{
+  position:absolute;right:-8px;bottom:-20px;
+  font-size:110px;font-weight:900;letter-spacing:-0.06em;
+  color:rgba(0,0,0,0.12);line-height:1;pointer-events:none;
+  font-family:var(--font);
+}
+.hero-eyebrow{font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;opacity:0.55;margin-bottom:8px;}
+.hero-big{font-size:30px;font-weight:800;letter-spacing:-0.04em;line-height:1.05;color:#111;}
+.hero-sub{font-size:12px;opacity:0.55;margin-top:8px;font-weight:500;}
+.hero-tags{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;}
+.hero-tag{
+  font-size:11px;font-weight:600;padding:4px 10px;
+  border-radius:100px;background:rgba(0,0,0,0.12);color:rgba(0,0,0,0.6);
+}
+
+/* EVENT CARDS */
+.event-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);margin-bottom:8px;
+  overflow:hidden;transition:border-color 0.15s;
+}
+.event-card.done{opacity:0.45;}
+.event-card.done .event-name{text-decoration:line-through;}
+
+.event-main{display:flex;align-items:stretch;min-height:68px;}
+.event-bar{width:3px;flex-shrink:0;background:var(--muted);}
+.event-bar.cat-food{background:#f5a623;}
+.event-bar.cat-beach{background:#4ecdc4;}
+.event-bar.cat-night{background:#a78bfa;}
+.event-bar.cat-sunset{background:#fb923c;}
+.event-bar.cat-shop{background:#f472b6;}
+.event-bar.cat-chill{background:#4ade80;}
+.event-bar.cat-travel{background:#38bdf8;}
+.event-bar.cat-explore{background:#fbbf24;}
+
+.event-center{flex:1;padding:12px 12px 10px 14px;min-width:0;}
+.event-meta-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.event-time{font-size:10px;font-weight:600;color:var(--muted2);letter-spacing:0.04em;}
+.event-cat{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:2px 7px;}
+.event-name{font-size:15px;font-weight:700;letter-spacing:-0.02em;color:var(--white);line-height:1.2;margin-bottom:2px;}
+.event-place{font-size:12px;color:var(--muted2);font-weight:400;line-height:1.3;}
+
+.event-right{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;padding:10px 12px;flex-shrink:0;
+}
+.btn-done{
+  width:28px;height:28px;border-radius:50%;
+  border:2px solid var(--border2);background:transparent;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all 0.15s;color:var(--muted);
+}
+.btn-done:active{transform:scale(0.9);}
+.btn-done.checked{border-color:var(--green);background:var(--green);color:#111;}
+.btn-done svg{width:13px;height:13px;stroke-width:2.5;}
+
+.btn-more{
+  width:28px;height:28px;border-radius:50%;
+  border:1px solid var(--border2);background:transparent;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--muted);transition:all 0.15s;
+}
+.btn-more:active{background:var(--surface2);}
+.btn-more svg{width:14px;height:14px;stroke-width:2;}
+
+/* WARN STRIP */
+.warn-strip{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 14px 9px 17px;
+  border-top:1px dashed var(--border2);
+  font-size:11px;color:var(--amber);font-weight:500;
+  background:rgba(245,200,66,0.04);
+}
+.warn-dot{width:5px;height:5px;border-radius:50%;background:var(--amber);flex-shrink:0;}
+
+/* NOTE STRIP */
+.note-strip{
+  padding:8px 14px 10px 17px;
+  border-top:1px solid var(--border);
+  background:var(--surface2);
+}
+.note-label{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.note-text{font-size:12px;color:var(--muted2);line-height:1.4;font-weight:400;}
+
+/* SECTION LABEL */
+.section-label{
+  font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--muted);margin:16px 0 8px 2px;
+}
+
+/* ── BOTTOM SHEET ── */
+.sheet-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,0.7);
+  z-index:200;display:none;opacity:0;transition:opacity 0.2s;
+}
+.sheet-backdrop.open{display:flex;align-items:flex-end;opacity:1;}
+.sheet{
+  width:100%;max-width:430px;margin:0 auto;
+  background:var(--surface);border-radius:24px 24px 0 0;
+  padding:0 0 env(safe-area-inset-bottom);
+  transform:translateY(100%);transition:transform 0.3s cubic-bezier(0.32,0.72,0,1);
+  max-height:85dvh;overflow-y:auto;
+}
+.sheet.open{transform:translateY(0);}
+.sheet-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:12px auto 16px;}
+.sheet-title{font-size:16px;font-weight:800;letter-spacing:-0.02em;padding:0 20px 4px;}
+.sheet-subtitle{font-size:12px;color:var(--muted2);padding:0 20px 16px;}
+.sheet-divider{height:1px;background:var(--border);margin:0 0 16px;}
+
+.sheet-action{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 20px;cursor:pointer;
+  transition:background 0.1s;
+}
+.sheet-action:active{background:var(--surface2);}
+.sheet-action-icon{
+  width:38px;height:38px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.sheet-action-text{flex:1;}
+.sheet-action-label{font-size:14px;font-weight:600;margin-bottom:1px;}
+.sheet-action-sub{font-size:11px;color:var(--muted2);}
+.sheet-action-right{color:var(--muted2);}
+.sheet-action-right svg{width:16px;height:16px;stroke-width:2;}
+
+/* NOTE INPUT AREA */
+.note-input-wrap{padding:12px 20px 20px;}
+.note-textarea{
+  width:100%;background:var(--surface2);border:1px solid var(--border2);
+  border-radius:12px;padding:12px 14px;
+  font-family:var(--font);font-size:13px;color:var(--white);
+  resize:none;min-height:80px;outline:none;
+  transition:border-color 0.15s;
+}
+.note-textarea:focus{border-color:var(--lime);}
+.note-textarea::placeholder{color:var(--muted);}
+.note-save-btn{
+  margin-top:10px;width:100%;padding:12px;
+  background:var(--lime);color:#111;border:none;
+  border-radius:12px;font-family:var(--font);
+  font-size:14px;font-weight:700;cursor:pointer;
+  transition:opacity 0.15s;
+}
+.note-save-btn:active{opacity:0.8;}
+
+/* DELETE CONFIRM */
+.delete-area{padding:0 20px 20px;}
+.delete-btn{
+  width:100%;padding:13px;background:rgba(255,95,95,0.1);
+  border:1px solid rgba(255,95,95,0.25);color:var(--red);
+  border-radius:12px;font-family:var(--font);
+  font-size:14px;font-weight:700;cursor:pointer;
+  transition:background 0.15s;
+}
+.delete-btn:active{background:rgba(255,95,95,0.2);}
+
+/* ── ADD EVENT SHEET ── */
+.add-input{
+  width:100%;background:var(--surface2);border:1px solid var(--border2);
+  border-radius:12px;padding:12px 14px;
+  font-family:var(--font);font-size:13px;color:var(--white);
+  outline:none;transition:border-color 0.15s;margin-bottom:8px;
+}
+.add-input:focus{border-color:var(--lime);}
+.add-input::placeholder{color:var(--muted);}
+.cat-picker{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.cat-chip{
+  padding:5px 12px;border-radius:100px;
+  border:1px solid var(--border2);background:transparent;
+  font-family:var(--font);font-size:11px;font-weight:600;
+  color:var(--muted2);cursor:pointer;transition:all 0.12s;
+}
+.cat-chip.selected{background:var(--lime);border-color:var(--lime);color:#111;}
+.day-picker{display:flex;gap:6px;margin-bottom:16px;}
+.day-chip{
+  flex:1;padding:8px 4px;border-radius:10px;
+  border:1px solid var(--border2);background:transparent;
+  font-family:var(--font);font-size:11px;font-weight:700;
+  color:var(--muted2);cursor:pointer;text-align:center;
+  transition:all 0.12s;
+}
+.day-chip.selected{background:var(--lime);border-color:var(--lime);color:#111;}
+
+/* ── TIPS ── */
+.tip-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px 16px;margin-bottom:8px;
+}
+.tip-head{display:flex;align-items:center;gap:10px;margin-bottom:5px;}
+.tip-icon{width:30px;height:30px;border-radius:9px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.tip-title{font-size:13px;font-weight:700;letter-spacing:-0.01em;}
+.tip-body{font-size:12px;color:var(--muted2);line-height:1.5;}
+.warn-banner{background:rgba(245,200,66,0.07);border:1px solid rgba(245,200,66,0.18);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;}
+.warn-banner-title{font-size:15px;font-weight:800;color:var(--amber);letter-spacing:-0.02em;margin-bottom:4px;}
+.warn-banner-body{font-size:12px;color:rgba(245,200,66,0.6);line-height:1.5;}
+
+/* ── EATS ── */
+.eat-row{
+  display:flex;align-items:center;gap:12px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:12px 14px;margin-bottom:7px;
+}
+.eat-icon{font-size:24px;flex-shrink:0;}
+.eat-info{flex:1;}
+.eat-name{font-size:14px;font-weight:700;letter-spacing:-0.01em;margin-bottom:1px;}
+.eat-sub{font-size:11px;color:var(--muted2);}
+.dchip{font-family:var(--font);font-size:10px;font-weight:700;padding:3px 9px;border-radius:100px;}
+.d1{background:rgba(200,240,101,0.15);color:var(--lime);}
+.d2{background:rgba(78,205,196,0.15);color:#4ecdc4;}
+.d3{background:rgba(167,139,250,0.15);color:#a78bfa;}
+.d4{background:rgba(255,95,95,0.15);color:#ff5f5f;}
+
+/* PANELS */
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* FAB */
+.fab{
+  position:fixed;bottom:calc(72px + env(safe-area-inset-bottom));
+  right:20px;z-index:90;
+  width:48px;height:48px;border-radius:50%;
+  background:var(--lime);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(200,240,101,0.4);
+  transition:transform 0.15s,box-shadow 0.15s;
+}
+.fab:active{transform:scale(0.92);box-shadow:0 2px 10px rgba(200,240,101,0.3);}
+.fab svg{width:22px;height:22px;stroke:#111;stroke-width:2.5;}
+
+/* BOTTOM NAV */
+.bottom-nav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:430px;
+  padding:8px 20px;padding-bottom:calc(8px + env(safe-area-inset-bottom));
+  background:rgba(17,17,17,0.95);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;align-items:center;
+  z-index:80;
+}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  background:none;border:none;color:var(--muted);
+  font-family:var(--font);font-size:9px;font-weight:600;
+  letter-spacing:0.1em;text-transform:uppercase;
+  cursor:pointer;padding:4px 16px;border-radius:12px;transition:color 0.15s;
+}
+.nav-item.active{color:var(--lime);}
+.nav-item svg{width:20px;height:20px;stroke-width:1.8;}
+
+/* ── IDENTITY ── */
+.h-right{display:flex;align-items:center;gap:10px;}
+.me-switch{
+  display:flex;align-items:center;gap:7px;
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:100px;padding:4px 4px 4px 10px;cursor:pointer;
+  transition:border-color 0.15s;
+}
+.me-switch:active{border-color:var(--lime);}
+.me-switch-label{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);}
+.avatar{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;color:#111;letter-spacing:-0.02em;
+}
+.avatar.sm{width:18px;height:18px;font-size:9px;}
+.avatar.lg{width:46px;height:46px;font-size:19px;}
+.av-aastha{background:var(--aastha);}
+.av-utsav{background:var(--utsav);}
+
+/* assignee + attribution chips on event cards */
+.event-foot{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  margin-top:8px;
+}
+.assignee-chip{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:100px;padding:2px 9px 2px 3px;
+  font-size:10px;font-weight:600;color:var(--muted2);
+}
+.assignee-chip.unassigned{padding-left:9px;color:var(--muted);border-style:dashed;border-color:var(--border2);}
+.attrib{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:10px;font-weight:500;color:var(--muted);
+}
+.attrib .avatar.sm{margin-right:-1px;}
+
+/* ── CREW PANEL ── */
+.crew-people{display:flex;gap:8px;margin-bottom:6px;}
+.crew-card{
+  flex:1;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  position:relative;overflow:hidden;cursor:pointer;
+  transition:border-color 0.15s;
+}
+.crew-card.is-me{border-color:var(--lime);}
+.crew-card.is-me::after{
+  content:'YOU';position:absolute;top:9px;right:9px;
+  font-size:8px;font-weight:800;letter-spacing:0.12em;
+  color:#111;background:var(--lime);padding:2px 6px;border-radius:100px;
+}
+.crew-name{font-size:14px;font-weight:800;letter-spacing:-0.02em;}
+.crew-stat{font-size:10px;color:var(--muted2);font-weight:500;text-align:center;line-height:1.4;}
+.crew-stat b{color:var(--white);font-weight:700;}
+
+.task-add{display:flex;gap:7px;margin-bottom:10px;}
+.task-add input{
+  flex:1;background:var(--surface2);border:1px solid var(--border2);
+  border-radius:11px;padding:11px 13px;
+  font-family:var(--font);font-size:13px;color:var(--white);outline:none;
+  transition:border-color 0.15s;
+}
+.task-add input:focus{border-color:var(--lime);}
+.task-add input::placeholder{color:var(--muted);}
+.task-add-btn{
+  width:42px;flex-shrink:0;background:var(--lime);border:none;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.15s;
+}
+.task-add-btn:active{opacity:0.8;}
+.task-add-btn svg{width:18px;height:18px;stroke:#111;stroke-width:2.6;}
+
+.task-filter{display:flex;gap:6px;margin-bottom:10px;}
+.tfchip{
+  padding:6px 13px;border-radius:100px;border:1px solid var(--border2);
+  background:transparent;color:var(--muted2);cursor:pointer;
+  font-family:var(--font);font-size:11px;font-weight:600;transition:all 0.12s;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.tfchip.active{background:var(--lime);border-color:var(--lime);color:#111;}
+.tfchip.active .avatar.sm{outline:1.5px solid rgba(0,0,0,0.25);}
+
+.task-row{
+  display:flex;align-items:center;gap:11px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:13px;padding:11px 13px;margin-bottom:7px;
+}
+.task-row.done{opacity:0.45;}
+.task-row.done .task-text{text-decoration:line-through;}
+.task-check{
+  width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  border:2px solid var(--border2);background:transparent;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all 0.15s;
+}
+.task-check.checked{border-color:var(--green);background:var(--green);color:#111;}
+.task-check:active{transform:scale(0.9);}
+.task-check svg{width:12px;height:12px;stroke-width:2.6;}
+.task-body{flex:1;min-width:0;}
+.task-text{font-size:13px;font-weight:600;letter-spacing:-0.01em;line-height:1.3;}
+.task-sub{font-size:10px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:5px;}
+.task-owner{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:#111;transition:transform 0.12s;
+}
+.task-owner:active{transform:scale(0.88);}
+.task-owner.none{background:var(--surface2);border:1.5px dashed var(--border2);color:var(--muted);font-size:14px;}
+.task-del{background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;display:flex;flex-shrink:0;}
+.task-del:active{color:var(--red);}
+.task-del svg{width:15px;height:15px;stroke-width:2;}
+.empty-note{text-align:center;color:var(--muted);font-size:12px;padding:24px 12px;line-height:1.5;}
+
+/* ── ASSIGN PICKER (in action sheet) ── */
+.assign-row{display:flex;gap:8px;padding:4px 20px 16px;}
+.assign-opt{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:11px 4px;border-radius:12px;border:1px solid var(--border2);
+  background:transparent;cursor:pointer;transition:all 0.12s;
+  font-family:var(--font);font-size:11px;font-weight:700;color:var(--muted2);
+}
+.assign-opt.selected{border-color:var(--lime);background:var(--surface2);color:var(--white);}
+.assign-opt .avatar{width:30px;height:30px;font-size:13px;}
+.assign-opt .av-none{background:var(--surface3);color:var(--muted);font-size:16px;border:1.5px dashed var(--border2);}
+.assign-opt .av-both{background:linear-gradient(135deg,var(--aastha) 50%,var(--utsav) 50%);}
+
+/* ── SYNC ── */
+.sync-section{padding:0 20px 20px;}
+.sync-blurb{font-size:12px;color:var(--muted2);line-height:1.5;margin-bottom:14px;}
+.sync-code{
+  width:100%;background:var(--surface2);border:1px solid var(--border2);
+  border-radius:12px;padding:13px 14px;font-family:var(--font-mono,monospace);
+  font-size:12px;color:var(--lime);word-break:break-all;line-height:1.5;
+  max-height:120px;overflow-y:auto;margin-bottom:10px;
+}
+.sync-btn-row{display:flex;gap:8px;}
+.sync-btn{
+  flex:1;padding:12px;border-radius:12px;font-family:var(--font);
+  font-size:13px;font-weight:700;cursor:pointer;transition:opacity 0.15s;border:none;
+}
+.sync-btn:active{opacity:0.8;}
+.sync-btn.primary{background:var(--lime);color:#111;}
+.sync-btn.ghost{background:var(--surface2);color:var(--white);border:1px solid var(--border2);}
+.sync-import textarea{
+  width:100%;background:var(--surface2);border:1px solid var(--border2);
+  border-radius:12px;padding:12px 14px;font-family:var(--font-mono,monospace);
+  font-size:12px;color:var(--white);resize:none;min-height:76px;outline:none;
+  transition:border-color 0.15s;margin-bottom:10px;
+}
+.sync-import textarea:focus{border-color:var(--lime);}
+.sync-toast{
+  position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));
+  transform:translateX(-50%) translateY(12px);
+  background:var(--white);color:#111;font-size:12px;font-weight:700;
+  padding:10px 18px;border-radius:100px;z-index:300;
+  opacity:0;pointer-events:none;transition:all 0.2s;white-space:nowrap;
+  box-shadow:0 6px 24px rgba(0,0,0,0.4);
+}
+.sync-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sheetIn{from{transform:translateY(100%);}to{transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="app-header">
+  <div class="header-row">
+    <div class="h-left">
+      <div class="h-eyebrow">North Goa · Trip</div>
+      <div class="h-title">Goa <span>'26</span></div>
+    </div>
+    <div class="h-right">
+      <div class="me-switch" id="meSwitch" onclick="cycleUser()" title="Switch person">
+        <span class="me-switch-label" id="meLabel">YOU</span>
+        <div class="avatar" id="meAvatar">A</div>
+      </div>
+      <div class="h-badge">4–7 JUN</div>
+    </div>
+  </div>
+  <div class="day-strip" id="dayStrip">
+    <button class="dtab active" data-day="0" onclick="switchDay(0)">D1 · Arrival</button>
+    <button class="dtab" data-day="1" onclick="switchDay(1)">D2 · Explore</button>
+    <button class="dtab" data-day="2" onclick="switchDay(2)">D3 · Beach</button>
+    <button class="dtab" data-day="3" onclick="switchDay(3)">D4 · Bye</button>
+  </div>
+</div>
+
+<!-- TRIP PANEL -->
+<div id="panel-trip" class="panel active">
+<div class="scroll-body">
+
+<!-- DAY 1 -->
+<div class="day-view active" data-day="0">
+  <div class="hero-card" style="background:var(--lime);">
+    <div class="hero-num">01</div>
+    <div class="hero-eyebrow">Thursday · 4 June 2026</div>
+    <div class="hero-big">Arrival<br>Vibes.</div>
+    <div class="hero-sub">North Goa, India</div>
+    <div class="hero-tags">
+      <div class="hero-tag">🏖 Beach</div>
+      <div class="hero-tag">🍽 Food</div>
+      <div class="hero-tag">🍻 Drinks</div>
+    </div>
+  </div>
+  <div class="section-label">Schedule</div>
+  <div id="events-0"></div>
+</div>
+
+<!-- DAY 2 -->
+<div class="day-view" data-day="1">
+  <div class="hero-card" style="background:#4ecdc4;">
+    <div class="hero-num">02</div>
+    <div class="hero-eyebrow">Friday · 5 June 2026</div>
+    <div class="hero-big">Explore<br>Mode.</div>
+    <div class="hero-sub">North Goa, India</div>
+    <div class="hero-tags">
+      <div class="hero-tag">🌿 Walk</div>
+      <div class="hero-tag">🏰 Fort</div>
+      <div class="hero-tag">🎉 Party</div>
+    </div>
+  </div>
+  <div class="section-label">Schedule</div>
+  <div id="events-1"></div>
+</div>
+
+<!-- DAY 3 -->
+<div class="day-view" data-day="2">
+  <div class="hero-card" style="background:#a78bfa;">
+    <div class="hero-num">03</div>
+    <div class="hero-eyebrow">Saturday · 6 June 2026</div>
+    <div class="hero-big">Big Beach<br>Day.</div>
+    <div class="hero-sub">North Goa, India</div>
+    <div class="hero-tags">
+      <div class="hero-tag">🌊 Beaches</div>
+      <div class="hero-tag">🍹 Cocktails</div>
+      <div class="hero-tag">🎶 Dynamo</div>
+    </div>
+  </div>
+  <div class="section-label">Schedule</div>
+  <div id="events-2"></div>
+</div>
+
+<!-- DAY 4 -->
+<div class="day-view" data-day="3">
+  <div class="hero-card" style="background:#ff5f5f;">
+    <div class="hero-num">04</div>
+    <div class="hero-eyebrow">Sunday · 7 June 2026</div>
+    <div class="hero-big">Last Day<br>Feels.</div>
+    <div class="hero-sub">North Goa, India</div>
+    <div class="hero-tags">
+      <div class="hero-tag">🥺 Savour it</div>
+      <div class="hero-tag">✈️ Depart</div>
+    </div>
+  </div>
+  <div class="section-label">Schedule</div>
+  <div id="events-3"></div>
+</div>
+
+</div>
+</div>
+
+<!-- CREW PANEL -->
+<div id="panel-crew" class="panel">
+<div class="scroll-body" style="padding-top:16px;">
+  <div class="section-label" style="margin-top:0;">The Crew</div>
+  <div class="crew-people" id="crewPeople"></div>
+  <button class="sync-btn ghost" style="width:100%;margin:6px 0 4px;display:flex;align-items:center;justify-content:center;gap:8px;" onclick="openSyncSheet()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2;"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+    Sync with the other phone
+  </button>
+
+  <div class="section-label">Prep &amp; Packing</div>
+  <div class="task-add">
+    <input id="taskInput" placeholder="Add a to-do… (e.g. Book scooter)" onkeydown="if(event.key==='Enter')addTask()" />
+    <button class="task-add-btn" onclick="addTask()" title="Add task">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+  </div>
+  <div class="task-filter" id="taskFilter">
+    <button class="tfchip active" data-f="all" onclick="setTaskFilter('all')">All</button>
+    <button class="tfchip" data-f="aastha" onclick="setTaskFilter('aastha')"><span class="avatar sm av-aastha">A</span>Aastha</button>
+    <button class="tfchip" data-f="utsav" onclick="setTaskFilter('utsav')"><span class="avatar sm av-utsav">U</span>Utsav</button>
+    <button class="tfchip" data-f="none" onclick="setTaskFilter('none')">Unclaimed</button>
+  </div>
+  <div id="taskList"></div>
+</div>
+</div>
+
+<!-- TIPS PANEL -->
+<div id="panel-tips" class="panel">
+<div class="scroll-body" style="padding-top:16px;">
+  <div class="warn-banner">
+    <div class="warn-banner-title">🌧 Monsoon Season</div>
+    <div class="warn-banner-body">Early June = shoulder season. Rough surf, red flag beach days, and some clubs may be closed. Embrace the rain — Goa in monsoon is actually magic.</div>
+  </div>
+  <div class="tip-card"><div class="tip-head"><div class="tip-icon">⚠️</div><div class="tip-title">Confirm venues before arriving</div></div><div class="tip-body">Raeth, Masaya, and Dynamo Goa — check Instagram or call ahead. Monsoon closures are real.</div></div>
+  <div class="tip-card"><div class="tip-head"><div class="tip-icon">📅</div><div class="tip-title">Flea Market = Wednesdays only</div></div><div class="tip-body">Anjuna Flea Market runs Wednesdays only. Day 2 is a Friday — swapped for a village walk.</div></div>
+  <div class="tip-card"><div class="tip-head"><div class="tip-icon">💸</div><div class="tip-title">Cash is king</div></div><div class="tip-body">Many beach shacks are cash-only. Keep ₹2–3K on you. ATMs run dry on weekends.</div></div>
+  <div class="tip-card"><div class="tip-head"><div class="tip-icon">🛵</div><div class="tip-title">Scooter in monsoon</div></div><div class="tip-body">Wet roads = slippery, especially Vagator-Chapora hill bends. Slow down. Helmets on.</div></div>
+  <div class="tip-card"><div class="tip-head"><div class="tip-icon">🌧</div><div class="tip-title">Rain backup spots</div></div><div class="tip-body">Artjuna Café, Bodega, or a long lazy lunch. Showers usually pass in 30–45 min.</div></div>
+  <div class="tip-card"><div class="tip-head"><div class="tip-icon">🏨</div><div class="tip-title">Check-in reality check</div></div><div class="tip-body">Hotels check in at noon. Arriving Day 1? Confirm early check-in or leave bags and head to brunch.</div></div>
+  <div class="tip-card"><div class="tip-head"><div class="tip-icon">🏖</div><div class="tip-title">Beach swimming</div></div><div class="tip-body">Red flag = no swimming. Monsoon surf is strong. Stick to shore and enjoy the vibe.</div></div>
+</div>
+</div>
+
+<!-- EATS PANEL -->
+<div id="panel-eats" class="panel">
+<div class="scroll-body" style="padding-top:16px;">
+  <div class="section-label">Breakfast & Brunch</div>
+  <div class="eat-row"><div class="eat-icon">🥞</div><div class="eat-info"><div class="eat-name">Babka</div><div class="eat-sub">Assagao · Brunch</div></div><div class="dchip d1">D1</div></div>
+  <div class="eat-row"><div class="eat-icon">☕</div><div class="eat-info"><div class="eat-name">Matcha Picchu</div><div class="eat-sub">Breakfast</div></div><div class="dchip d2">D2</div></div>
+  <div class="eat-row"><div class="eat-icon">🥣</div><div class="eat-info"><div class="eat-name">Larder & Folk</div><div class="eat-sub">Breakfast</div></div><div class="dchip d3">D3</div></div>
+  <div class="eat-row"><div class="eat-icon">🥐</div><div class="eat-info"><div class="eat-name">Baba Au Rhum</div><div class="eat-sub">Brunch</div></div><div class="dchip d4">D4</div></div>
+  <div class="section-label">Lunch & Dinner</div>
+  <div class="eat-row"><div class="eat-icon">🍛</div><div class="eat-info"><div class="eat-name">Boiler Maker</div><div class="eat-sub">Dinner</div></div><div class="dchip d1">D1</div></div>
+  <div class="eat-row"><div class="eat-icon">🍔</div><div class="eat-info"><div class="eat-name">Burger Factory</div><div class="eat-sub">Lunch</div></div><div class="dchip d2">D2</div></div>
+  <div class="eat-row"><div class="eat-icon">🌙</div><div class="eat-info"><div class="eat-name">Raeth</div><div class="eat-sub">Dinner · ⚠ confirm open</div></div><div class="dchip d2">D2</div></div>
+  <div class="eat-row"><div class="eat-icon">🌿</div><div class="eat-info"><div class="eat-name">Noah</div><div class="eat-sub">Dinner</div></div><div class="dchip d3">D3</div></div>
+  <div class="eat-row"><div class="eat-icon">🍽</div><div class="eat-info"><div class="eat-name">Jamun</div><div class="eat-sub">Last lunch 🥺</div></div><div class="dchip d4">D4</div></div>
+  <div class="section-label">Drinks & Nightlife</div>
+  <div class="eat-row"><div class="eat-icon">🌅</div><div class="eat-info"><div class="eat-name">Elephant & Co</div><div class="eat-sub">Sunset drinks</div></div><div class="dchip d1">D1</div></div>
+  <div class="eat-row"><div class="eat-icon">🍻</div><div class="eat-info"><div class="eat-name">Joseph Bar</div><div class="eat-sub">Night drinks</div></div><div class="dchip d1">D1</div></div>
+  <div class="eat-row"><div class="eat-icon">🍹</div><div class="eat-info"><div class="eat-name">Pisco</div><div class="eat-sub">Sunset cocktails</div></div><div class="dchip d3">D3</div></div>
+  <div class="eat-row"><div class="eat-icon">🎉</div><div class="eat-info"><div class="eat-name">Masaya</div><div class="eat-sub">Party · ⚠ confirm open</div></div><div class="dchip d2">D2</div></div>
+  <div class="eat-row"><div class="eat-icon">🎶</div><div class="eat-info"><div class="eat-name">Dynamo Goa</div><div class="eat-sub">Julian Jeweil · ⚠ confirm open</div></div><div class="dchip d3">D3</div></div>
+</div>
+</div>
+
+<!-- FAB -->
+<button class="fab" id="fabBtn" onclick="openAddSheet()" title="Add event">
+  <svg viewBox="0 0 24 24" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-item active" data-tab="trip" onclick="switchTab('trip')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    Trip
+  </button>
+  <button class="nav-item" data-tab="crew" onclick="switchTab('crew')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    Crew
+  </button>
+  <button class="nav-item" data-tab="tips" onclick="switchTab('tips')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Tips
+  </button>
+  <button class="nav-item" data-tab="eats" onclick="switchTab('eats')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+    Eats
+  </button>
+</div>
+
+<!-- EVENT ACTION SHEET -->
+<div class="sheet-backdrop" id="actionBackdrop" onclick="closeActionSheet()">
+  <div class="sheet" id="actionSheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="sheetEventName">Event</div>
+    <div class="sheet-subtitle" id="sheetEventSub"></div>
+    <div class="sheet-divider"></div>
+    <div class="section-label" style="margin:0 0 2px;padding:0 20px;">Who's on it</div>
+    <div class="assign-row" id="assignRow">
+      <button class="assign-opt" data-assign="none" onclick="setAssign('none')"><span class="avatar av-none">+</span>Nobody</button>
+      <button class="assign-opt" data-assign="aastha" onclick="setAssign('aastha')"><span class="avatar av-aastha">A</span>Aastha</button>
+      <button class="assign-opt" data-assign="utsav" onclick="setAssign('utsav')"><span class="avatar av-utsav">U</span>Utsav</button>
+      <button class="assign-opt" data-assign="both" onclick="setAssign('both')"><span class="avatar av-both"></span>Both</button>
+    </div>
+    <div class="sheet-divider"></div>
+    <div class="sheet-action" onclick="sheetToggleDone()">
+      <div class="sheet-action-icon" style="background:rgba(77,217,100,0.1);">✅</div>
+      <div class="sheet-action-text">
+        <div class="sheet-action-label" id="sheetDoneLabel">Mark as Done</div>
+        <div class="sheet-action-sub">Toggle completion status</div>
+      </div>
+      <div class="sheet-action-right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+    <div class="sheet-action" onclick="sheetOpenNote()">
+      <div class="sheet-action-icon" style="background:rgba(200,240,101,0.1);">📝</div>
+      <div class="sheet-action-text">
+        <div class="sheet-action-label">Add / Edit Note</div>
+        <div class="sheet-action-sub">e.g. Reservation confirmed, table for 4</div>
+      </div>
+      <div class="sheet-action-right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+    <div class="sheet-action" onclick="sheetDelete()">
+      <div class="sheet-action-icon" style="background:rgba(255,95,95,0.1);">🗑</div>
+      <div class="sheet-action-text">
+        <div class="sheet-action-label" style="color:var(--red);">Remove Event</div>
+        <div class="sheet-action-sub">Delete from itinerary</div>
+      </div>
+      <div class="sheet-action-right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+    <div style="height:8px;"></div>
+  </div>
+</div>
+
+<!-- NOTE SHEET -->
+<div class="sheet-backdrop" id="noteBackdrop" onclick="closeNoteSheet()">
+  <div class="sheet" id="noteSheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Add Note</div>
+    <div class="sheet-subtitle" id="noteSheetSub"></div>
+    <div class="sheet-divider"></div>
+    <div class="note-input-wrap">
+      <textarea class="note-textarea" id="noteInput" placeholder="e.g. Reservation confirmed ✅, table for 4 at 8:30pm" rows="4"></textarea>
+      <button class="note-save-btn" onclick="saveNote()">Save Note</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD EVENT SHEET -->
+<div class="sheet-backdrop" id="addBackdrop" onclick="closeAddSheet()">
+  <div class="sheet" id="addSheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Add Event</div>
+    <div class="sheet-subtitle">Add something new to your trip</div>
+    <div class="sheet-divider"></div>
+    <div class="note-input-wrap">
+      <input class="add-input" id="addName" placeholder="Event name (e.g. Lunch at Thalassa)" />
+      <input class="add-input" id="addTime" placeholder="Time (e.g. 13:30 – 15:00)" />
+      <input class="add-input" id="addPlace" placeholder="Place / notes (e.g. Vagator, North Goa)" />
+      <div class="section-label" style="margin-top:4px;">Category</div>
+      <div class="cat-picker" id="catPicker">
+        <button class="cat-chip selected" data-cat="food">🍽 Food</button>
+        <button class="cat-chip" data-cat="beach">🏖 Beach</button>
+        <button class="cat-chip" data-cat="shop">🛍 Shop</button>
+        <button class="cat-chip" data-cat="night">🎉 Night</button>
+        <button class="cat-chip" data-cat="sunset">🌅 Sunset</button>
+        <button class="cat-chip" data-cat="chill">😴 Chill</button>
+        <button class="cat-chip" data-cat="explore">🗺 Explore</button>
+        <button class="cat-chip" data-cat="travel">✈️ Travel</button>
+      </div>
+      <div class="section-label">Day</div>
+      <div class="day-picker" id="dayPickerAdd">
+        <button class="day-chip selected" data-day="0">D1</button>
+        <button class="day-chip" data-day="1">D2</button>
+        <button class="day-chip" data-day="2">D3</button>
+        <button class="day-chip" data-day="3">D4</button>
+      </div>
+      <button class="note-save-btn" onclick="saveNewEvent()">Add to Itinerary</button>
+    </div>
+  </div>
+</div>
+
+<!-- SYNC SHEET -->
+<div class="sheet-backdrop" id="syncBackdrop" onclick="closeSyncSheet()">
+  <div class="sheet" id="syncSheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Sync with the other phone</div>
+    <div class="sheet-subtitle">No login needed — just trade a code over WhatsApp</div>
+    <div class="sheet-divider"></div>
+    <div class="sync-section">
+      <div class="sync-blurb"><b style="color:var(--white);">Step 1 — Share your plan.</b> Tap below to copy your latest itinerary, notes and to-dos as a code. Paste it to the other person.</div>
+      <div class="sync-code" id="syncCodeBox">Tap “Generate code” to create one.</div>
+      <div class="sync-btn-row">
+        <button class="sync-btn primary" onclick="genSyncCode()">Generate code</button>
+        <button class="sync-btn ghost" onclick="copySyncCode()">Copy</button>
+      </div>
+      <div class="sheet-divider" style="margin:18px 0 16px;"></div>
+      <div class="sync-blurb"><b style="color:var(--white);">Step 2 — Pull theirs in.</b> Paste a code they sent you and merge it into your app. Newer edits win.</div>
+      <div class="sync-import">
+        <textarea id="syncImportBox" placeholder="Paste the code you received here…"></textarea>
+      </div>
+      <div class="sync-btn-row">
+        <button class="sync-btn primary" onclick="importSyncCode('merge')">Merge in</button>
+        <button class="sync-btn ghost" onclick="importSyncCode('replace')">Replace mine</button>
+      </div>
+    </div>
+    <div style="height:8px;"></div>
+  </div>
+</div>
+
+<div class="sync-toast" id="toast"></div>
+
+<script>
+// ── DATA ──
+const CAT_EMOJIS = {food:'🍽',beach:'🏖',shop:'🛍',night:'🎉',sunset:'🌅',chill:'😴',explore:'🗺',travel:'✈️'};
+
+const PEOPLE = {
+  aastha:{name:'Aastha',initial:'A',cls:'av-aastha'},
+  utsav:{name:'Utsav',initial:'U',cls:'av-utsav'},
+};
+const USER_ORDER = ['aastha','utsav'];
+let currentUser = 'aastha';
+
+const STORE_KEY = 'goa26_state_v1';
+
+let events = [
+  // Day 1
+  {id:1,day:0,time:'11:00 – 12:30',name:'Babka',place:'Assagao',cat:'food',done:false,note:'',warn:''},
+  {id:2,day:0,time:'12:30',name:'Check-in + Scooter',place:'Vagator Hotel',cat:'travel',done:false,note:'',warn:'Confirm early check-in with hotel in advance'},
+  {id:3,day:0,time:'13:00 – 16:00',name:'Beach + Pool + Chill',place:'Vagator / Ozran Beach',cat:'beach',done:false,note:'',warn:''},
+  {id:4,day:0,time:'16:30 – 17:30',name:'Shopping',place:'Rangeela, Assagao',cat:'shop',done:false,note:'',warn:''},
+  {id:5,day:0,time:'18:30 – 19:15',name:'Sunset Drinks',place:'Elephant & Co',cat:'sunset',done:false,note:'',warn:''},
+  {id:6,day:0,time:'20:30',name:'Dinner',place:'Boiler Maker',cat:'food',done:false,note:'',warn:''},
+  {id:7,day:0,time:'22:30',name:'Night Drinks',place:'Joseph Bar',cat:'night',done:false,note:'',warn:''},
+  // Day 2
+  {id:8,day:1,time:'09:30 – 10:30',name:'Breakfast',place:'Matcha Picchu',cat:'food',done:false,note:'',warn:''},
+  {id:9,day:1,time:'11:00 – 13:00',name:'Village Walk',place:'Vagator / Chapora village',cat:'explore',done:false,note:'',warn:'Flea Market is Wed only — swapped!'},
+  {id:10,day:1,time:'13:30',name:'Lunch',place:'Burger Factory',cat:'food',done:false,note:'',warn:''},
+  {id:11,day:1,time:'15:00 – 18:00',name:'Pool + Nap',place:'Hotel — rest up for tonight',cat:'chill',done:false,note:'',warn:''},
+  {id:12,day:1,time:'18:45 – 19:15',name:'Sunset at the Fort',place:'Chapora Fort',cat:'sunset',done:false,note:'',warn:''},
+  {id:13,day:1,time:'20:15',name:'Dinner',place:'Raeth',cat:'food',done:false,note:'',warn:'Confirm open in June — monsoon closures'},
+  {id:14,day:1,time:'22:00 – 02:00',name:'Party Night',place:'Masaya',cat:'night',done:false,note:'',warn:'Confirm open in June — monsoon closures'},
+  // Day 3
+  {id:15,day:2,time:'10:00',name:'Breakfast',place:'Larder & Folk',cat:'food',done:false,note:'',warn:''},
+  {id:16,day:2,time:'11:00 – 13:00',name:'Shopping Circuit',place:'Paper Boat → People Tree → Sacha\'s',cat:'shop',done:false,note:'',warn:''},
+  {id:17,day:2,time:'13:30 – 15:00',name:'Ashwem Beach',place:'Stop 1 of 2',cat:'beach',done:false,note:'',warn:''},
+  {id:18,day:2,time:'15:30 – 17:00',name:'Mandrem Beach',place:'Stop 2 of 2 — Querim skipped, pace yourself',cat:'beach',done:false,note:'',warn:''},
+  {id:19,day:2,time:'18:45 – 19:15',name:'Sunset Cocktails',place:'Pisco',cat:'sunset',done:false,note:'',warn:''},
+  {id:20,day:2,time:'20:30',name:'Dinner',place:'Noah',cat:'food',done:false,note:'',warn:''},
+  {id:21,day:2,time:'22:30 – 03:00',name:'Dynamo Goa 🔥',place:'Julian Jeweil',cat:'night',done:false,note:'',warn:'Confirm open in June before you go'},
+  // Day 4
+  {id:22,day:3,time:'10:30',name:'Brunch',place:'Baba Au Rhum',cat:'food',done:false,note:'',warn:''},
+  {id:23,day:3,time:'12:00 – 14:00',name:'Last Wanders',place:'Shopping / Coffee, Vagator',cat:'shop',done:false,note:'',warn:''},
+  {id:24,day:3,time:'14:00',name:'Last Lunch 🥺',place:'Jamun',cat:'food',done:false,note:'',warn:''},
+  {id:25,day:3,time:'15:30 – 17:00',name:'Final Beach Walk',place:'Vagator / Ozran — soak it all in',cat:'beach',done:false,note:'',warn:''},
+  {id:26,day:3,time:'17:30',name:'Pack + Check-out',place:'Hotel',cat:'travel',done:false,note:'',warn:''},
+  {id:27,day:3,time:'18:00',name:'Bye Goa 😢',place:'Airport / Station',cat:'travel',done:false,note:'',warn:''},
+];
+
+let nextId = 100;
+let currentDay = 0;
+let activeEventId = null;
+let taskFilter = 'all';
+
+// default seed of shared prep / packing tasks
+let tasks = [
+  {id:'t1',text:'Book flights to Goa',owner:'utsav',done:true,doneBy:'utsav'},
+  {id:'t2',text:'Reserve Vagator hotel',owner:'aastha',done:true,doneBy:'aastha'},
+  {id:'t3',text:'Pre-book scooter rental',owner:'utsav',done:false,doneBy:null},
+  {id:'t4',text:'Confirm Raeth + Masaya are open in June',owner:'aastha',done:false,doneBy:null},
+  {id:'t5',text:'Carry ₹6–8K cash (shacks are cash-only)',owner:'utsav',done:false,doneBy:null},
+  {id:'t6',text:'Pack rain jackets + dry bag',owner:'aastha',done:false,doneBy:null},
+  {id:'t7',text:'Download offline maps of North Goa',owner:null,done:false,doneBy:null},
+  {id:'t8',text:'Sunscreen, meds, power bank',owner:null,done:false,doneBy:null},
+];
+let nextTaskId = 100;
+
+// give every event the collab fields; sensible default assignees for logistics
+const ASSIGN_SEED = {2:'utsav',5:'aastha',6:'aastha',13:'aastha',14:'utsav',21:'utsav',26:'utsav'};
+events.forEach(e => {
+  if (e.assignee === undefined) e.assignee = ASSIGN_SEED[e.id] || 'none';
+  if (e.addedBy === undefined) e.addedBy = null;   // null = part of the original plan
+  if (e.doneBy === undefined) e.doneBy = null;
+});
+
+// ── PERSISTENCE ──
+function saveState() {
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify({
+      events, tasks, currentUser, nextId, nextTaskId, ts: Date.now()
+    }));
+  } catch(err) {}
+}
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    if (Array.isArray(s.events)) events = s.events;
+    if (Array.isArray(s.tasks)) tasks = s.tasks;
+    if (s.currentUser && PEOPLE[s.currentUser]) currentUser = s.currentUser;
+    if (typeof s.nextId === 'number') nextId = s.nextId;
+    if (typeof s.nextTaskId === 'number') nextTaskId = s.nextTaskId;
+  } catch(err) {}
+}
+loadState();
+
+// ── RENDER HELPERS ──
+function avatarHTML(user, size) {
+  const p = PEOPLE[user]; if (!p) return '';
+  return `<span class="avatar ${size||'sm'} ${p.cls}">${p.initial}</span>`;
+}
+function assigneeChipHTML(ev) {
+  if (ev.assignee === 'both') {
+    return `<span class="assignee-chip">${avatarHTML('aastha')}${avatarHTML('utsav')}Both</span>`;
+  }
+  if (ev.assignee === 'aastha' || ev.assignee === 'utsav') {
+    return `<span class="assignee-chip">${avatarHTML(ev.assignee)}${PEOPLE[ev.assignee].name}</span>`;
+  }
+  return `<span class="assignee-chip unassigned">+ Assign</span>`;
+}
+function footHTML(ev) {
+  let bits = `<span onclick="openActionSheet(${ev.id},event)" style="cursor:pointer;">${assigneeChipHTML(ev)}</span>`;
+  if (ev.done && ev.doneBy) {
+    bits += `<span class="attrib">${avatarHTML(ev.doneBy)}done by ${PEOPLE[ev.doneBy].name}</span>`;
+  } else if (ev.addedBy) {
+    bits += `<span class="attrib">${avatarHTML(ev.addedBy)}added by ${PEOPLE[ev.addedBy].name}</span>`;
+  }
+  return `<div class="event-foot">${bits}</div>`;
+}
+
+// ── RENDER ──
+function renderDay(day) {
+  const container = document.getElementById(`events-${day}`);
+  const dayEvents = events.filter(e => e.day === day);
+  if (!container) return;
+  container.innerHTML = '';
+  dayEvents.forEach((ev, i) => {
+    const card = document.createElement('div');
+    card.className = `event-card${ev.done?' done':''}`;
+    card.id = `card-${ev.id}`;
+    card.innerHTML = `
+      <div class="event-main">
+        <div class="event-bar cat-${ev.cat}"></div>
+        <div class="event-center">
+          <div class="event-meta-row">
+            <span class="event-time">${ev.time}</span>
+            <span class="event-cat">${CAT_EMOJIS[ev.cat]||''} ${ev.cat}</span>
+          </div>
+          <div class="event-name">${ev.name}</div>
+          <div class="event-place">${ev.place}</div>
+          ${footHTML(ev)}
+        </div>
+        <div class="event-right">
+          <button class="btn-done ${ev.done?'checked':''}" onclick="toggleDone(${ev.id},event)" title="Mark done">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+          </button>
+          <button class="btn-more" onclick="openActionSheet(${ev.id},event)" title="Options">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>
+          </button>
+        </div>
+      </div>
+      ${ev.warn ? `<div class="warn-strip"><div class="warn-dot"></div>${ev.warn}</div>` : ''}
+      ${ev.note ? `<div class="note-strip"><div class="note-label">📝 Note</div><div class="note-text">${ev.note}</div></div>` : ''}
+    `;
+    container.appendChild(card);
+  });
+}
+
+function renderAll() {
+  [0,1,2,3].forEach(d => renderDay(d));
+}
+
+renderAll();
+
+// ── TOGGLE DONE ──
+function toggleDone(id, e) {
+  e && e.stopPropagation();
+  const ev = events.find(x => x.id === id);
+  if (!ev) return;
+  ev.done = !ev.done;
+  ev.doneBy = ev.done ? currentUser : null;
+  saveState();
+  renderDay(ev.day);
+}
+
+// ── ACTION SHEET ──
+function openActionSheet(id, e) {
+  e && e.stopPropagation();
+  activeEventId = id;
+  const ev = events.find(x => x.id === id);
+  if (!ev) return;
+  document.getElementById('sheetEventName').textContent = ev.name;
+  document.getElementById('sheetEventSub').textContent = `${ev.time} · ${ev.place}`;
+  document.getElementById('sheetDoneLabel').textContent = ev.done ? 'Mark as Not Done' : 'Mark as Done';
+  const asg = ev.assignee || 'none';
+  document.querySelectorAll('#assignRow .assign-opt').forEach(o => {
+    o.classList.toggle('selected', o.dataset.assign === asg);
+  });
+  const bd = document.getElementById('actionBackdrop');
+  const sh = document.getElementById('actionSheet');
+  bd.style.display = 'flex'; requestAnimationFrame(()=>{ bd.style.opacity='1'; sh.classList.add('open'); });
+}
+function closeActionSheet() {
+  const bd = document.getElementById('actionBackdrop');
+  const sh = document.getElementById('actionSheet');
+  sh.classList.remove('open'); bd.style.opacity='0';
+  setTimeout(()=>{ bd.style.display='none'; }, 220);
+}
+function sheetToggleDone() {
+  if (!activeEventId) return;
+  toggleDone(activeEventId);
+  closeActionSheet();
+}
+function setAssign(who) {
+  const ev = events.find(x => x.id === activeEventId);
+  if (!ev) return;
+  ev.assignee = who;
+  document.querySelectorAll('#assignRow .assign-opt').forEach(o => {
+    o.classList.toggle('selected', o.dataset.assign === who);
+  });
+  saveState();
+  renderDay(ev.day);
+}
+function sheetDelete() {
+  if (!activeEventId) return;
+  const ev = events.find(x => x.id === activeEventId);
+  if (!ev) return;
+  events = events.filter(x => x.id !== activeEventId);
+  saveState();
+  renderDay(ev.day);
+  closeActionSheet();
+}
+function sheetOpenNote() {
+  closeActionSheet();
+  setTimeout(() => openNoteSheet(activeEventId), 280);
+}
+
+// ── NOTE SHEET ──
+function openNoteSheet(id) {
+  const ev = events.find(x => x.id === id);
+  if (!ev) return;
+  activeEventId = id;
+  document.getElementById('noteSheetSub').textContent = ev.name;
+  document.getElementById('noteInput').value = ev.note || '';
+  const bd = document.getElementById('noteBackdrop');
+  const sh = document.getElementById('noteSheet');
+  bd.style.display = 'flex'; requestAnimationFrame(()=>{ bd.style.opacity='1'; sh.classList.add('open'); document.getElementById('noteInput').focus(); });
+}
+function closeNoteSheet() {
+  const bd = document.getElementById('noteBackdrop');
+  const sh = document.getElementById('noteSheet');
+  sh.classList.remove('open'); bd.style.opacity='0';
+  setTimeout(()=>{ bd.style.display='none'; }, 220);
+}
+function saveNote() {
+  const ev = events.find(x => x.id === activeEventId);
+  if (!ev) return;
+  ev.note = document.getElementById('noteInput').value.trim();
+  saveState();
+  renderDay(ev.day);
+  closeNoteSheet();
+}
+
+// ── ADD EVENT SHEET ──
+let selectedCat = 'food';
+let selectedAddDay = 0;
+
+document.getElementById('catPicker').addEventListener('click', e => {
+  const chip = e.target.closest('.cat-chip');
+  if (!chip) return;
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('selected'));
+  chip.classList.add('selected');
+  selectedCat = chip.dataset.cat;
+});
+document.getElementById('dayPickerAdd').addEventListener('click', e => {
+  const chip = e.target.closest('.day-chip');
+  if (!chip) return;
+  document.querySelectorAll('#dayPickerAdd .day-chip').forEach(c => c.classList.remove('selected'));
+  chip.classList.add('selected');
+  selectedAddDay = parseInt(chip.dataset.day);
+});
+
+function openAddSheet() {
+  // Pre-select current day
+  document.querySelectorAll('#dayPickerAdd .day-chip').forEach(c => {
+    c.classList.toggle('selected', parseInt(c.dataset.day) === currentDay);
+  });
+  selectedAddDay = currentDay;
+  document.getElementById('addName').value = '';
+  document.getElementById('addTime').value = '';
+  document.getElementById('addPlace').value = '';
+  const bd = document.getElementById('addBackdrop');
+  const sh = document.getElementById('addSheet');
+  bd.style.display = 'flex'; requestAnimationFrame(()=>{ bd.style.opacity='1'; sh.classList.add('open'); document.getElementById('addName').focus(); });
+}
+function closeAddSheet() {
+  const bd = document.getElementById('addBackdrop');
+  const sh = document.getElementById('addSheet');
+  sh.classList.remove('open'); bd.style.opacity='0';
+  setTimeout(()=>{ bd.style.display='none'; }, 220);
+}
+function saveNewEvent() {
+  const name = document.getElementById('addName').value.trim();
+  if (!name) { document.getElementById('addName').focus(); return; }
+  const ev = {
+    id: nextId++,
+    day: selectedAddDay,
+    time: document.getElementById('addTime').value.trim() || '—',
+    name,
+    place: document.getElementById('addPlace').value.trim() || '',
+    cat: selectedCat,
+    done: false,
+    note: '',
+    warn: '',
+    assignee: 'none',
+    addedBy: currentUser,
+    doneBy: null
+  };
+  events.push(ev);
+  saveState();
+  renderDay(ev.day);
+  closeAddSheet();
+  // Switch to that day
+  switchDay(ev.day);
+  // Scroll to bottom of list
+  setTimeout(()=>{ window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'}); }, 300);
+}
+
+// ── DAY / TAB NAV ──
+function switchDay(day) {
+  currentDay = day;
+  document.querySelectorAll('.dtab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.day-view').forEach(v => v.classList.remove('active'));
+  document.querySelector(`.dtab[data-day="${day}"]`).classList.add('active');
+  document.querySelector(`.day-view[data-day="${day}"]`).classList.add('active');
+  renderDay(day);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById(`panel-${tab}`).classList.add('active');
+  document.querySelector(`.nav-item[data-tab="${tab}"]`).classList.add('active');
+  document.getElementById('dayStrip').style.display = tab==='trip' ? 'flex' : 'none';
+  document.getElementById('fabBtn').style.display = tab==='trip' ? 'flex' : 'none';
+  if (tab === 'crew') renderCrew();
+  window.scrollTo({top:0});
+}
+
+// ── IDENTITY ──
+function renderMe() {
+  const p = PEOPLE[currentUser];
+  const av = document.getElementById('meAvatar');
+  av.textContent = p.initial;
+  av.className = 'avatar ' + p.cls;
+  document.getElementById('meLabel').textContent = p.name;
+}
+function cycleUser() {
+  const i = USER_ORDER.indexOf(currentUser);
+  currentUser = USER_ORDER[(i + 1) % USER_ORDER.length];
+  renderMe();
+  saveState();
+  if (document.getElementById('panel-crew').classList.contains('active')) renderCrew();
+  toast(`Now acting as ${PEOPLE[currentUser].name}`);
+}
+
+// ── CREW + TASKS ──
+function setTaskFilter(f) {
+  taskFilter = f;
+  document.querySelectorAll('#taskFilter .tfchip').forEach(c => c.classList.toggle('active', c.dataset.f === f));
+  renderTasks();
+}
+function renderCrew() {
+  // people cards with live stats
+  const wrap = document.getElementById('crewPeople');
+  wrap.innerHTML = USER_ORDER.map(u => {
+    const p = PEOPLE[u];
+    const myEvents = events.filter(e => e.assignee === u || (e.assignee === 'both'));
+    const myTasks = tasks.filter(t => t.owner === u);
+    const tDone = myTasks.filter(t => t.done).length;
+    return `<div class="crew-card ${u===currentUser?'is-me':''}" onclick="setUser('${u}')">
+      ${avatarHTML(u,'lg')}
+      <div class="crew-name">${p.name}</div>
+      <div class="crew-stat"><b>${myEvents.length}</b> events · <b>${tDone}/${myTasks.length}</b> to-dos done</div>
+    </div>`;
+  }).join('');
+  renderTasks();
+}
+function renderTasks() {
+  const list = document.getElementById('taskList');
+  let rows = tasks.filter(t => {
+    if (taskFilter === 'all') return true;
+    if (taskFilter === 'none') return !t.owner;
+    return t.owner === taskFilter;
+  });
+  if (!rows.length) { list.innerHTML = `<div class="empty-note">Nothing here yet.<br>Add a to-do above.</div>`; return; }
+  list.innerHTML = rows.map(t => {
+    const ownerBtn = t.owner
+      ? `<div class="task-owner ${PEOPLE[t.owner].cls}" onclick="cycleTaskOwner('${t.id}')" title="Tap to reassign">${PEOPLE[t.owner].initial}</div>`
+      : `<div class="task-owner none" onclick="cycleTaskOwner('${t.id}')" title="Tap to assign">+</div>`;
+    const sub = t.done && t.doneBy
+      ? `<div class="task-sub">${avatarHTML(t.doneBy)} done by ${PEOPLE[t.doneBy].name}</div>`
+      : (t.owner ? `<div class="task-sub">${PEOPLE[t.owner].name}'s job</div>` : `<div class="task-sub">Unclaimed — tap the circle to grab it</div>`);
+    return `<div class="task-row ${t.done?'done':''}">
+      <button class="task-check ${t.done?'checked':''}" onclick="toggleTask('${t.id}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+      </button>
+      <div class="task-body"><div class="task-text">${t.text}</div>${sub}</div>
+      ${ownerBtn}
+      <button class="task-del" onclick="deleteTask('${t.id}')" title="Delete">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      </button>
+    </div>`;
+  }).join('');
+}
+function addTask() {
+  const inp = document.getElementById('taskInput');
+  const text = inp.value.trim();
+  if (!text) { inp.focus(); return; }
+  tasks.push({id:'t'+(nextTaskId++), text, owner:null, done:false, doneBy:null});
+  inp.value = '';
+  saveState();
+  renderTasks();
+  renderCrew();
+}
+function toggleTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  t.done = !t.done;
+  t.doneBy = t.done ? currentUser : null;
+  saveState();
+  renderTasks();
+  renderCrew();
+}
+function cycleTaskOwner(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  const cycle = [null, 'aastha', 'utsav'];
+  const i = cycle.indexOf(t.owner);
+  t.owner = cycle[(i + 1) % cycle.length];
+  saveState();
+  renderTasks();
+  renderCrew();
+}
+function deleteTask(id) {
+  tasks = tasks.filter(x => x.id !== id);
+  saveState();
+  renderTasks();
+  renderCrew();
+}
+function setUser(u) {
+  if (!PEOPLE[u]) return;
+  currentUser = u;
+  renderMe();
+  saveState();
+  renderCrew();
+  toast(`Now acting as ${PEOPLE[u].name}`);
+}
+
+// ── SYNC (no backend — trade a code) ──
+function openSyncSheet() {
+  document.getElementById('syncCodeBox').textContent = 'Tap “Generate code” to create one.';
+  document.getElementById('syncImportBox').value = '';
+  const bd = document.getElementById('syncBackdrop');
+  const sh = document.getElementById('syncSheet');
+  bd.style.display = 'flex'; requestAnimationFrame(()=>{ bd.style.opacity='1'; sh.classList.add('open'); });
+}
+function closeSyncSheet() {
+  const bd = document.getElementById('syncBackdrop');
+  const sh = document.getElementById('syncSheet');
+  sh.classList.remove('open'); bd.style.opacity='0';
+  setTimeout(()=>{ bd.style.display='none'; }, 220);
+}
+function encodeState() {
+  const payload = JSON.stringify({events, tasks, ts: Date.now(), v:1});
+  // unicode-safe base64
+  return 'GOA26.' + btoa(unescape(encodeURIComponent(payload)));
+}
+function decodeState(code) {
+  const raw = code.trim().replace(/^GOA26\./, '');
+  return JSON.parse(decodeURIComponent(escape(atob(raw))));
+}
+function genSyncCode() {
+  document.getElementById('syncCodeBox').textContent = encodeState();
+}
+function copySyncCode() {
+  const box = document.getElementById('syncCodeBox');
+  if (!box.textContent.startsWith('GOA26.')) genSyncCode();
+  const text = box.textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(()=>toast('Code copied — paste it to the other phone'), ()=>fallbackCopy(text));
+  } else fallbackCopy(text);
+}
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text; document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); toast('Code copied'); } catch(e){ toast('Select & copy manually'); }
+  document.body.removeChild(ta);
+}
+function importSyncCode(mode) {
+  const code = document.getElementById('syncImportBox').value;
+  if (!code.trim()) { toast('Paste a code first'); return; }
+  let incoming;
+  try { incoming = decodeState(code); }
+  catch(e) { toast('That code didn’t look right'); return; }
+  if (!incoming || !Array.isArray(incoming.events)) { toast('That code didn’t look right'); return; }
+
+  if (mode === 'replace') {
+    events = incoming.events;
+    tasks = Array.isArray(incoming.tasks) ? incoming.tasks : tasks;
+  } else {
+    // merge: incoming wins on overlap, keep my extras, union new items
+    const map = {}; events.forEach(e => map[e.id] = e);
+    incoming.events.forEach(e => { map[e.id] = e; });
+    events = Object.values(map);
+    const tmap = {}; tasks.forEach(t => tmap[t.id] = t);
+    (incoming.tasks||[]).forEach(t => { tmap[t.id] = t; });
+    tasks = Object.values(tmap);
+  }
+  // keep id counters ahead
+  const maxE = events.reduce((m,e)=>Math.max(m, +e.id||0), 99); nextId = Math.max(nextId, maxE+1);
+  saveState();
+  renderAll();
+  renderCrew();
+  closeSyncSheet();
+  toast(mode === 'replace' ? 'Replaced with their plan' : 'Merged — you’re in sync');
+}
+
+// ── TOAST ──
+let toastTimer = null;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+// ── INIT ──
+renderMe();
+</script>
+</body>
+</html>
